@@ -3,17 +3,15 @@ use std::fs::File;
 use std::io::prelude::*;
 
 fn argmax(vector: &Vec<usize>) -> (usize, usize) {
-    let mut current_max = vector[0];
-    let mut current_ix = 0;
+    vector
+        .iter()
+        .zip(0..)
+        .fold((0, vector[0]), |last, this| {
+            let (i, val) = last;
+            let (new, j) = this;
 
-    for i in 0..vector.len() {
-        if vector[i] > current_max {
-            current_max = vector[i];
-            current_ix = i;
-        }
-    }
-
-    (current_ix, current_max)
+            if *new > val { (j, *new) } else { (i, val) }
+        })
 }
 
 /**
@@ -43,7 +41,7 @@ fn step(banks: &Vec<usize>) -> Vec<usize> {
     out
 }
 
-fn part1(start: Vec<usize>) -> (i32, i32) {
+fn solve(start: Vec<usize>) -> (i32, i32) {
     let mut visited = HashMap::new();
     let mut next = start.to_vec();
     let mut steps = 0;
@@ -76,5 +74,5 @@ fn main() {
         .map(|x| x.parse::<usize>().unwrap())
         .collect();
 
-    println!("Both Parts: {:?}", part1(start));
+    println!("Both Parts: {:?}", solve(start));
 }
